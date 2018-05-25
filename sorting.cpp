@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
-
+//INSERT SORT
+#include<stdio.h>
 int main()
 {
     int a[10],i,j,n;
@@ -37,3 +38,4 @@ int main()
 
     return 0;
 }
+//V T Nishant 108117106
