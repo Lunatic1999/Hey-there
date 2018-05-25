@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <math.h>
 //INSERT SORT
 #include<stdio.h>
 int main()
