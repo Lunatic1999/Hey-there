@@ -6,23 +6,39 @@ int main(void)
 { int i,j,key,num; char b,a[20][20];
   scanf("%d %d",&num,&key);
   key=key%26;
-  for(int i=0;i<num+1;i++)
+  for(int i=0;i<=2*num;++i)
    gets(a[i]);
-  for(i=0;i<num+1;i++) 
+  for( i=0;i<=2*num;++i) 
    for(j=0;j<strlen(a[i]);j++)
    { b=a[i][j];
-     if(isalpha(a[i][j]))
-      {a[i][j]+=key; 
+     if(i<=num)
+	{ if(isalpha(a[i][j]))                                             //ENCRYPTION
+      {a[i][j]+=key;                    
        if (isalpha (a[i][j]))
-      { if(islower(a[i][j])!=islower(b))
-         a[i][j]-=26;}
-     else if(isalpha(a[i][j])==0))
-       a[i][j]-=26
-   }}
-  for(i=0;i<num+1;i++) 	
+       {if(islower(a[i][j])!=islower(b))
+        a[i][j]-=26;
+	   }
+     else if(isalpha(a[i][j])==0)
+       a[i][j]-=26;
+      }
+	}
+	else
+	{if(isalpha(a[i][j]))                                             //DECRYPTION
+      {a[i][j]-=key; 
+       if (isalpha (a[i][j]))
+       {if(islower(a[i][j])!=islower(b))
+        a[i][j]+=26;
+	   }
+     else if(isalpha(a[i][j])==0)
+       a[i][j]+=26;
+      }
+	}
+   }      
+  for( i=0;i<=2*num;++i) 	
    puts(a[i]);
  return 0;
 }
+
 
 
 //TASK 1B Elevator scheduling
