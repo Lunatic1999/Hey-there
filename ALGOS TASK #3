@@ -1,0 +1,66 @@
+#include<stdio.h>
+#include<limits.h>
+#include<math.h>
+class trienode
+{ public:
+  trienode* left;
+  trienode* right;
+	
+};
+void insert(int n,trienode* head)
+{  trienode* curr =head;
+   for(int i=31;i>=0;i--)
+   { int b=(n>>i)&1;              //Checking the ith bit whether it is 0 or 1
+     if(b==0)  
+     {if(!curr->left)              //Checking if left node exists
+        curr->left=new trienode(); //new left node creation
+       curr=curr->left;}
+	  else
+	 { if(!curr->right)             //Checking if right node exists  
+	    curr->right=new trienode(); //new right node creation
+		curr=curr->right;}  
+	 }
+   	 
+}
+	
+int maxxor(trienode* head,int *a,int size)
+{ int max_xor=INT_MIN,curr_xor=0,value,b;
+  for(int i=0;i<size;i++)
+  { value=a[i];
+    trienode* curr=head;
+    curr_xor=0;
+	for(int j=31;j>=0;j--)
+    { b=(value>>j)&1;
+      if(b==0)
+      { if(curr->right)                    //T    T     T     M                    
+         { curr_xor+=pow(2,j);              //R    R     O     A
+           curr=curr->right;                 //A    I           X
+       }                                      //V    E     G
+	   else                                //E          E     X
+	    curr=curr->left;                    //R     T    T     O
+	  }                                      //S     R          R 
+	    else                                  //I     E           
+	    { if(curr->left)                       //N     E            
+	      {curr_xor+=pow(2,j);                  //G                 
+	       curr=curr->left;                             
+          }                                           
+	      else                                      
+	       curr=curr->right;
+		}	   	
+	  }
+    
+    if(curr_xor>max_xor)	 
+     max_xor=curr_xor;
+  }
+   return max_xor; 	
+}
+int main(void)
+{ int array[100],n
+  scanf("%d",&n);
+  trienode* head=new trienode();
+  for(int i=0;i<n;i++)
+  { scanf("%d",&array[i]);
+    insert(array[i],head);
+  }
+  printf("%d",maxxor(head,array,n));
+}
