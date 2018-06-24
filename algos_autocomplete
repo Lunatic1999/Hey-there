@@ -4,45 +4,60 @@ using namespace std;
 int total = 5;
 
 struct trie
-{	bool end;
-	bool partword;
-	trie * alp[26];
+{ bool end;
+  bool partword;
+  trie * alp[26];
 };
+
 struct trie * create_trie()
 {
 	trie * newnode = new trie;
 	newnode->end = false;
+	
 	for(int i = 0; i < 26; ++i)
-		newnode->alp[i] = NULL;
+	 newnode->alp[i] = NULL;
 	return newnode;
 }
-
-void query_top5(struct trie * root, string a)
+void insert_trie(struct trie * root, string a)
 {	trie * Temp = root;
+	
 	for(int i = 0; i < a.length(); ++i)
-	{  int W = a[i] - 97;
-		if(Temp->alp[W] != NULL)
-	     Temp = temp->alp[W];						     
-		
-	}	
-	if(search(Temp)> 0)
-	{
-	    search_top5(temp, a);    
+	{       int W = a[i] - 'a';
+		if(Temp->alp[W] == NULL)
+			Temp->alp[W] = create_trie();
+		if(Temp->end == true)
+		 Temp->end = false;
+		Temp = Temp->alp[W];
 	}
+	Temp->partword = true;
+	Temp->end = true;
 }
 
-//Remove tries
-void removetrie(struct trie * root, string a)
-{	trie * Temp = root,* prev = root;
+int search(struct trie * root)
+{
+    trie * Temp=root;
+    int total = 0;
+    if(Temp->end == true)
+       return 1;
+    else if(Temp->partword == true)
+      ++total;
+    else
+    {for(int i = 0; i < 26; ++i)
+        {
+            if(Temp->alp[i] != NULL)
+               total += search(Temp->alp[i]);
+        }
+    }
+    return total;
+}
+void remove_trie(struct trie * root, string a)
+{       trie * Temp = root, * prev = root;
 	int i;
-	
-	for(i = 0; search(temp) > 1; ++i)
+	for(i = 0; search(Temp) > 1; ++i)
 	{
-	    int index = a[i] - 97;
+	    int W = a[i] - 97;
 	    prev = Temp;
-	    Temp = Temp->alp[index];
-	    
-	    //If it is a partword
+	    Temp = Temp->alp[W];
 	    if(i == a.length())
 	    {
 	        prev->partword = false;
@@ -53,133 +68,108 @@ void removetrie(struct trie * root, string a)
 	
 	if(i < a.length())
 	{
-	    int index = a[i - 1] - 97;
-	    prev->alp[index] = NULL;
+	    int W= a[i - 1] - 97;
+	    prev->alp[W] = NULL;
 	}
 }
-//REVERT
-void revert(int x, string queries[], string queriess[], struct trie * root, int n)
-{
-    
-    int c = 0;
-    // Operations until x'th modification
-    for(int i = 0; (c < x) && (i  < n); ++i)
-    { if(queries[i][0] = 'a')
-        {
-            ++c;
-            inserttrie(root, queriess[i]);
-        }
-        else if(queries[i][2] == 'm')
-        {
-            ++c;
-            removetrie(root, queriess[i]);
-        }
-    }
-}
-int search(struct trie * root)
-{
-    trie * Temp = root;
-    int total = 0;
-    if(Temp->end == true)
-        return 1;
-    //If partword exists
-    else if(Temp->partword == true)
-        ++total;
-    else
-    {for(int i = 0; i < 26; ++i)
-       if(Temp->alp[i] != NULL)
-          total += search(Temp->alp[i]);
-    }
-    return total;
-}
-//Insert tries
-void inserttrie(struct trie * root, string a)
-{	trie * Temp = root;
-	
-	for(int i = 0; i < a.length(); ++i)
-	{  int W = a[i] - 'a';
-
-		if(Temp->alp[W] == NULL)
-		 Temp->alp[W] = createtrie();
-		
-     	        if(Temp->end == true)
-                 Temp->end = false;
-		Temp = Temp->alp[index];
-	}
-	
-	Temp->partword = true;
-	Temp->end = true;
-}
-
-// top 5 queries 
-void search_top5(struct trie * s, string a)
-{
-	bool flag = false;
+void search_top5(struct trie * start, string a)
+{      bool flag = false;
 	
 	if(total > 0)
-	{for(int i = 0; i < 26; ++i)
-	    {if(start->alp[i] != NULL)
-	    	{
-	    	 flag = true;
-	    	 char b = i + 97;
-			 string c = a + b;
-			 trie * Temp = s;
-			 Temp = Temp->alp[i];
-		    	search_top5(Temp, c);		
-		    }
+       {    for(int i = 0; i < 26; ++i)
+	    { 	if(start->alp[i] != NULL)
+	     {   	    
+	        flag = true;
+		char b = i + 97;
+		string c = a + b;
+		trie * temp = start;
+		temp = temp->child[i];
+		search_top5(temp, c);		
+	     }
 	    }
-	    if((s->partword == true) && (s->end == false)) // IF ITS A PART WORD
-    	  {
-    	    --total;
+	    if((start->partword == true) && (start->end == false))
+    	   {
+    	        --total;
 	        cout<<a<<endl;
 	    }
-	    else if(flag == false)  // IF ITS END OF THE WORD
-	    {
-	        --total;
+	    else if(flag == false)
+	    {       --total;
 		    cout<<a<<endl;
 	    }    
 	}
 }
+void query_top5(struct trie * root, string a)
+{      trie * Temp = root;
+	for(int i = 0; i < a.length(); ++i)
+	{int index = a[i] - 97;
+		if(Temp->alp[index] != NULL)
+		{
+		   Temp = Temp->alp[index];						     
+		}
+	}	
+	if(search(Temp) > 0)
+	   search_top5(Temp, a);    
+	
+}
+void revert(int x, string queries[], string queriess[], struct trie * root, int n)
+{    int c = 0;
+    for(int i = 0; (c< x) && (i  < n); ++i)
+    { if(queries[i][0] = 'a')
+        {
+            ++c;
+            insert_trie(root, queriess[i]);
+        }
+        else if(queries[i][2] == 'm')
+        {
+            ++c;
+            remove_trie(root, queriess[i]);
+        }
+    }
+}
+
 int main ()
-{ trie * root = createtrie();
-  string searches[100],queries[100],queriess[100];
-  int N;
-  cin>>N;
+{ trie * root = create_trie();
+	string keys[100],queries[100],queriess[100];
+	int N;
+	cin>>N;
 	
 	for(int i = 0; i < N; ++i)
-   {    cin>>searches[i];
-        inserttrie(root, searches[i]);
+	{
+        cin>>keys[i];
+        insert_trie(root, keys[i]);
     }
 	int Q; 
 	cin>>Q;
+	
 	for(int i = 0; i < Q; ++i)
- {
-         cin>>queries[i];
-         total = 5;
-         if(queries[i][0] == 'a')
-	 {
-	  cin>>queriess[i];
-	  inserttrie(root, queriess[i]);
-	 }
-	 else if(queries[i][0] == 'q')
-	 {
-	  cin>>queriess[i];
-	  query_top5(root, queriess[i]);
-	 }
-	 else if(queries[i][2] == 'v')
-	 {
-	   int x;
-	   cin>>x;
-	   root = createtrie();
-	   for(int j = 0; j < N; ++j)
-	   inserttrie(root,searches[j]);
-	   revert(x, queries, queriess, root, i);
-	 }
-	 else if(queries[i][2] == 'm')
-	 { cin>>queriess[i];
-	   removetrie(root, queries2[i]);
-	 } 		
-  }	
-  return 0;
+	{
+        cin>>queries[i];
+        total = 5;
+		if(queries[i][0] == 'q')
+		{
+		    cin>>queriess[i];
+			query_top5(root, queriess[i]);
+		}
+		else if(queries[i][0] == 'a')
+		{
+			cin>>queriess[i];
+			insert_trie(root, queriess[i]);
+		}
+		else if(queries[i][2] == 'm')
+		{
+			cin>>queriess[i];
+			remove_trie(root, queriess[i]);
+		}
+		else if(queries[i][2] == 'v')
+		{    int x;
+		    cin>>x;
+		    root = create_trie();
+		    for(int j = 0; j < N; ++j)
+		        insert_trie(root, keys[j]);
+		    revert(x, queries, queriess, root, i);
+		}
+		
+	}	
+	
+	return 0;
 }
-        
