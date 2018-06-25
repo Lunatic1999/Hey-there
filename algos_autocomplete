@@ -114,12 +114,12 @@ void query_top5(struct trie * root, string a)
 void revert(int x, string queries[], string queriess[], struct trie * root, int n)
 {    int c = 0;
     for(int i = 0; (c< x) && (i  < n); ++i)
-    { if(queries[i][0] = 'a')
+    { if(queries[i][2] = 'm')
         {
             ++c;
             insert_trie(root, queriess[i]);
         }
-        else if(queries[i][2] == 'm')
+        else if(queries[i][0] == 'a')
         {
             ++c;
             remove_trie(root, queriess[i]);
