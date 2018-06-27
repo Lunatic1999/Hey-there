@@ -89,13 +89,16 @@ int main()
 	while(f)
 	{
 		int N, threshold;
-		cin>>N>>threshold;
+		cin>>N;
 		n = N;
 		if(N == 0)
 	          f=0;
-		if(f)
-		{for(int i = 0; i < N; ++i)
-		 for(int j = 0; j < N; ++j)
+		if(f==0)
+		 return 0;
+		else if(f==1)
+		{cin>>threshold;
+		 for(int i = 0; i < N; ++i)
+		  for(int j = 0; j < N; ++j)
 			cin>>A[i][j];
 		compress(0, 0, N, threshold);
 		cout<<"Image "<<num<<":"<<endl;
