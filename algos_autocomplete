@@ -83,7 +83,7 @@ void search_top5(struct trie * start, string a)
 		char b = i + 97;
 		string c = a + b;
 		trie * temp = start;
-		temp = temp->child[i];
+		temp = temp->alp[i];
 		search_top5(temp, c);		
 	     }
 	    }
