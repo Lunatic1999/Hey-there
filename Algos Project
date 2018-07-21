@@ -241,7 +241,8 @@ public:
     }
 };
 
-int main(){
+int main()
+{
     Game gamer;
     gamer.reload();
 }
